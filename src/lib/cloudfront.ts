@@ -8,7 +8,7 @@ import { CreateInvalidationCommand } from "@aws-sdk/client-cloudfront";
  * @throws Error if CLOUDFRONT_DISTRIBUTION_ID is not set or invalidation fails
  */
 export async function invalidateCloudFrontPaths(paths: string[]): Promise<void> {
-    const distributionId = process.env.CLOUDFRONT_DISTRIBUTION_ID;
+    const distributionId = process.env.NEXT_PUBLIC_CLOUDFRONT_DISTRIBUTION_ID;
 
     if (!distributionId) {
         throw new Error("CLOUDFRONT_DISTRIBUTION_ID environment variable is not set");
