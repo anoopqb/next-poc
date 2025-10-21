@@ -1,5 +1,11 @@
-import { CreateInvalidationCommand } from "@aws-sdk/client-cloudfront";
+import { CloudFrontClient, CreateInvalidationCommand } from "@aws-sdk/client-cloudfront";
 
+// Initialize CloudFront client with configuration
+// CloudFront is a global service, so we use us-east-1 region
+const cloudFrontClient = new CloudFrontClient({
+    region: "us-east-1",
+    // Add credentials if needed (will use default credential chain if not specified)
+});
 
 /**
  * Invalidates CloudFront cache for the specified paths
@@ -11,7 +17,7 @@ export async function invalidateCloudFrontPaths(paths: string[]): Promise<void> 
     const distributionId = process.env.NEXT_PUBLIC_CLOUDFRONT_DISTRIBUTION_ID;
 
     if (!distributionId) {
-        throw new Error("CLOUDFRONT_DISTRIBUTION_ID environment variable is not set");
+        throw new Error("NEXT_PUBLIC_CLOUDFRONT_DISTRIBUTION_ID environment variable is not set");
     }
 
     if (!paths.length) {
@@ -31,7 +37,9 @@ export async function invalidateCloudFrontPaths(paths: string[]): Promise<void> 
             },
         });
 
-        console.log(`CloudFront invalidation created for ${paths.length} path(s)`);
+        // THIS WAS MISSING - Actually send the command!
+        const response = await cloudFrontClient.send(command);
+        console.log(`CloudFront invalidation created for ${paths.length} path(s)`, response.Invalidation?.Id);
     } catch (error) {
         console.error("Failed to invalidate CloudFront paths:", error);
         throw error;
