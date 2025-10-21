@@ -1,8 +1,9 @@
+
+export const revalidate = 600;
+
 const SSRPage = async () => {
 
-    const data = await fetch(`https://romantic-wealth-03592779c1.strapiapp.com/api/articles/?populate=*`, {
-        cache: 'no-store'
-    })
+    const data = await fetch(`https://romantic-wealth-03592779c1.strapiapp.com/api/articles/?populate=*`)
     const articles = await data.json()
     return (
         <div className="flex flex-col items-center justify-center h-screen">
